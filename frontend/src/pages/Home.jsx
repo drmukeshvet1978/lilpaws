@@ -6,19 +6,21 @@ import { motion } from 'framer-motion';
 import Hero from '../components/Hero';
 import SectionHeading from '../components/SectionHeading';
 import ServiceCard from '../components/ServiceCard';
+import ProductCard from '../components/ProductCard';
 import TestimonialCard from '../components/TestimonialCard';
 import FAQAccordion from '../components/FAQAccordion';
 import { Loader } from '../components/States';
 import { Reveal, Stagger, StaggerItem } from '../components/motion/Reveal';
 import MagneticButton from '../components/motion/MagneticButton';
 import { CatMark, PawMark } from '../components/motion/PetIllustrations';
-import { homepageApi, serviceApi, testimonialApi, faqApi, aboutApi } from '../api/services';
+import { homepageApi, serviceApi, testimonialApi, faqApi, aboutApi, productApi } from '../api/services';
 
 const toPascalCase = (str = '') => str.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join('');
 
 export default function Home() {
   const [content, setContent] = useState(null);
   const [services, setServices] = useState([]);
+  const [products, setProducts] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
   const [faqs, setFaqs] = useState([]);
   const [doctor, setDoctor] = useState(null);
@@ -28,13 +30,21 @@ export default function Home() {
     Promise.all([
       homepageApi.get(),
       serviceApi.getAll(),
+      productApi.getAll(),
       testimonialApi.getAll(),
       faqApi.getAll(),
       aboutApi.get(),
     ])
-      .then(([h, s, t, f, a]) => {
+      .then(([h, s, p, t, f, a]) => {
         setContent(h.data.content);
         setServices(s.data.services.slice(0, 6));
+        // featured items shelved first, then fill the rest of the shelf with
+        // whatever's in stock — keeps the strip full even before anything
+        // is marked "featured" in the admin panel
+        const available = (p.data.products || []).filter((prod) => prod.isAvailable !== false);
+        const featured = available.filter((prod) => prod.isFeatured);
+        const rest = available.filter((prod) => !prod.isFeatured);
+        setProducts([...featured, ...rest].slice(0, 8));
         setTestimonials(t.data.testimonials.slice(0, 3));
         setFaqs(f.data.faqs.slice(0, 5));
         setDoctor(a.data.profile);
@@ -126,6 +136,53 @@ export default function Home() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {services.map((s, i) => <ServiceCard key={s._id} service={s} index={i} />)}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* Pet Shop — horizontal shelf, deliberately different rhythm from
+          the numbered services grid above so the two offerings (care vs.
+          shopping) read as distinct without feeling disconnected */}
+      {products.length > 0 && (
+        <section className="section-pad bg-bone relative overflow-hidden">
+          <div aria-hidden="true" className="absolute inset-0 bg-paw-print opacity-[0.04]" />
+          <div className="container-lp relative">
+            <div className="flex flex-wrap items-end justify-between gap-6 mb-10">
+              <SectionHeading eyebrow="From the Pet Shop" title="Everyday essentials, ready to grab" />
+              <Link to="/pet-shop" className="btn-ghost hidden sm:inline-flex items-center gap-1.5">
+                Visit the shop <ArrowRight size={15} />
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="container-lp">
+              <div className="flex gap-5 overflow-x-auto pb-4 -mx-1 px-1 snap-x snap-mandatory scrollbar-none">
+                {products.map((p, i) => (
+                  <div key={p._id} className="shrink-0 w-[72vw] xs:w-64 sm:w-72 snap-start">
+                    <ProductCard product={p} index={i} />
+                  </div>
+                ))}
+                {/* trailing "see everything" card, same shelf, same scroll */}
+                <Link
+                  to="/pet-shop"
+                  data-cursor="Shop"
+                  className="shrink-0 w-[72vw] xs:w-64 sm:w-72 snap-start rounded-2xl border-2 border-dashed border-ink/15 hover:border-paw-500 flex flex-col items-center justify-center gap-3 text-center p-8 transition-colors group"
+                >
+                  <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white text-paw-600 group-hover:bg-paw-500 group-hover:text-white transition-colors shadow-soft">
+                    <ArrowRight size={20} />
+                  </span>
+                  <span className="font-display font-semibold text-ink">See the full shop</span>
+                  <span className="text-sm text-ink/55">Food, toys, grooming &amp; more</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="container-lp mt-2 sm:hidden">
+            <Link to="/pet-shop" className="btn-ghost inline-flex items-center gap-1.5">
+              Visit the shop <ArrowRight size={15} />
+            </Link>
           </div>
         </section>
       )}
