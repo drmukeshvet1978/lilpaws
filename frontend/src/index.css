@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cream text-ink font-body antialiased;
+}
+
+h1, h2, h3, h4 {
+  @apply font-display;
+}
+
+::selection {
+  @apply bg-paw-200 text-ink;
+}
+
+/* Visible focus states for accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #F0800E;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.container-lp {
+  @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-12;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 bg-paw-500 text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-200 hover:bg-paw-600 hover:shadow-soft active:scale-[0.98];
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 bg-transparent border-2 border-ink text-ink font-semibold px-6 py-3 rounded-full transition-all duration-200 hover:bg-ink hover:text-cream active:scale-[0.98];
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 text-ink font-semibold underline-offset-4 hover:underline transition-all duration-200;
+}
+
+.section-pad {
+  @apply py-16 sm:py-24;
+}
+
+.input {
+  @apply w-full bg-bone/60 border border-ink/10 rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink/35 focus:bg-white focus:border-paw-500 transition-colors outline-none;
+}
+
+/* Subtle film-grain texture, layered on top of sections for warmth */
+.bg-grain {
+  position: relative;
+}
+.bg-grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: theme('backgroundImage.grain');
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Custom cursor — desktop with a fine pointer only; never on touch devices */
+@media (hover: hover) and (pointer: fine) {
+  .cursor-none-desktop {
+    cursor: none;
+  }
+}
+
+.eyebrow {
+  @apply inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-paw-600;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.mask-fade-b {
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
