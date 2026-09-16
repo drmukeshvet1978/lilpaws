@@ -4,7 +4,7 @@ import { Phone, ArrowRight, ArrowDown } from 'lucide-react';
 import useSiteSettings from '../hooks/useSiteSettings';
 import { RevealText } from './motion/Reveal';
 import MagneticButton from './motion/MagneticButton';
-import { DogMark, PawMark } from './motion/PetIllustrations';
+import { PawMark } from './motion/PetIllustrations';
 
 export default function Hero({ hero }) {
   const { settings } = useSiteSettings();
@@ -33,17 +33,6 @@ export default function Hero({ hero }) {
       >
         <PawMark className="w-full h-full" />
       </motion.div>
-      <motion.div
-        aria-hidden="true"
-        className="hidden lg:block absolute bottom-[12%] left-[18%] w-16 h-16 text-paw-300/70 animate-float-slow"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.6 }}
-        transition={{ delay: 1.1, duration: 0.8 }}
-        style={{ animationDelay: '1.2s' }}
-      >
-        <DogMark className="w-full h-full" color="#D6690A" accent="#151312" />
-      </motion.div>
-
       <div className="container-lp relative grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center pt-10 sm:pt-16 pb-20 sm:pb-28">
         <div>
           <motion.span
@@ -114,7 +103,7 @@ export default function Hero({ hero }) {
                   aria-hidden="true"
                   className="absolute w-[85%] h-[85%] rounded-full bg-paw-200/50 blur-2xl"
                 />
-                <DogMark className="relative w-56 h-56 sm:w-64 sm:h-64" color="#7E3D0B" accent="#F0800E" />
+                <PawMark className="relative w-24 h-24 text-paw-400/70" />
               </div>
             )}
           </div>

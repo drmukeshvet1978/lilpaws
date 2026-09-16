@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Facebook, Instagram, Youtube, ArrowUpRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 import logo from '../assets/logo.png';
 import useSiteSettings from '../hooks/useSiteSettings';
 import { Reveal } from './motion/Reveal';
-import { DogMark } from './motion/PetIllustrations';
 import MagneticButton from './motion/MagneticButton';
 
 export default function Footer() {
@@ -37,19 +35,7 @@ export default function Footer() {
           </Reveal>
         </div>
 
-        {/* the dog walks in from the left as this row scrolls into view */}
-        <div className="relative h-16 sm:h-20 mt-6 mb-6 overflow-hidden">
-          <motion.div
-            initial={{ left: '0%' }}
-            whileInView={{ left: '93%' }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 2.6, ease: 'easeInOut' }}
-            className="absolute bottom-0 w-14 h-14 sm:w-16 sm:h-16"
-          >
-            <DogMark className="w-full h-full" color="#FBF7F1" accent="#F0800E" />
-          </motion.div>
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-cream/10" />
-        </div>
+        <div className="h-px bg-cream/10 mt-10 mb-6" />
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 pt-4">
           <div className="col-span-2 md:col-span-1">
