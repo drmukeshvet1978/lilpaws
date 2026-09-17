@@ -41,7 +41,7 @@ export default function Hero({ hero }) {
             transition={{ duration: 0.5, delay: 0.05 }}
             className="eyebrow bg-paw-100 px-3.5 py-1.5 rounded-full mb-6"
           >
-            <PawMark className="w-3.5 h-3.5" /> Kolar Road, Bhopal
+            <PawMark className="w-3.5 h-3.5" /> Minal & Kolar Road, Bhopal
           </motion.span>
 
           <h1 className="font-display font-semibold leading-[0.98] text-ink text-balance text-4xl sm:text-6xl lg:text-[4.4rem]">
@@ -57,7 +57,7 @@ export default function Hero({ hero }) {
             className="mt-7 text-lg text-ink/65 leading-relaxed max-w-lg"
           >
             {hero?.subtitle ||
-              'Lil Paws Dog Clinic & Pet Shop brings veterinary care and everyday pet essentials together, right on Kolar Road, Bhopal.'}
+              'Lil Paws Dog Clinic & Pet Shop brings veterinary care and everyday pet essentials together, across our Minal and Kolar Road locations in Bhopal.'}
           </motion.p>
 
           <div className="mt-9 flex flex-wrap items-center gap-4">

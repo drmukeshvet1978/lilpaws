@@ -119,7 +119,7 @@ export default function Home() {
             />
             <Reveal delay={0.2}>
               <p className="mt-5 text-ink/65 leading-relaxed">
-                {doctor?.aboutText || 'Lil Paws Dog Clinic & Pet Shop brings together veterinary care and everyday pet essentials on Kolar Road, Bhopal.'}
+                {doctor?.aboutText || 'Lil Paws Dog Clinic & Pet Shop brings together veterinary care and everyday pet essentials across our Minal and Kolar Road locations in Bhopal.'}
               </p>
               <Link to="/about" className="btn-ghost mt-6 inline-flex items-center gap-1.5">
                 Read our story <ArrowRight size={15} />

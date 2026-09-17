@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const siteSettingsSchema = new mongoose.Schema(
   {
     // Contact
-    address: { type: String, default: 'Kolar Road, Bhopal, Madhya Pradesh, India' },
+    address: { type: String, default: 'Minal & Kolar Road, Bhopal, Madhya Pradesh, India' },
     phone: { type: String, default: '' },
     whatsapp: { type: String, default: '' },
     email: { type: String, default: '' },
@@ -29,10 +29,10 @@ const siteSettingsSchema = new mongoose.Schema(
 
     // SEO
     seo: {
-      metaTitle: { type: String, default: 'Lil Paws Dog Clinic & Pet Shop | Kolar Road, Bhopal' },
+      metaTitle: { type: String, default: 'Lil Paws Dog Clinic & Pet Shop | Minal & Kolar Road, Bhopal' },
       metaDescription: {
         type: String,
-        default: 'Lil Paws Dog Clinic & Pet Shop by Dr. Mukesh Tiwari, Kolar Road, Bhopal. Veterinary care and pet shop under one roof.',
+        default: 'Lil Paws Dog Clinic & Pet Shop by Dr. Mukesh Tiwari, with locations at Minal and Kolar Road, Bhopal. Veterinary care and pet shop under one roof.',
       },
       keywords: { type: [String], default: [] },
       ogImage: {
@@ -45,7 +45,7 @@ const siteSettingsSchema = new mongoose.Schema(
     // Footer
     footerDescription: {
       type: String,
-      default: 'Caring for your dogs and pets with a modern clinic and a well-stocked pet shop, on Kolar Road, Bhopal.',
+      default: 'Caring for your dogs and pets with a modern clinic and a well-stocked pet shop, at our Minal and Kolar Road locations in Bhopal.',
     },
   },
   { timestamps: true }

@@ -25,7 +25,7 @@ export default function Footer() {
           <Reveal delay={0.1} className="flex flex-col sm:items-end gap-4">
             <p className="text-cream/60 max-w-xs sm:text-right">
               {settings?.footerDescription ||
-                'Veterinary care and pet essentials, together on Kolar Road, Bhopal — by Dr. Mukesh Tiwari.'}
+                'Veterinary care and pet essentials, across our Minal and Kolar Road locations in Bhopal — by Dr. Mukesh Tiwari.'}
             </p>
             <MagneticButton>
               <Link to="/appointments" className="btn-primary" data-cursor="Book">
@@ -74,7 +74,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-cream/60">
               <li className="flex gap-2.5">
                 <MapPin size={16} className="shrink-0 mt-0.5 text-paw-400" />
-                <span>{settings?.address || 'Kolar Road, Bhopal, Madhya Pradesh, India'}</span>
+                <span>{settings?.address || 'Minal & Kolar Road, Bhopal, Madhya Pradesh, India'}</span>
               </li>
               {settings?.phone && (
                 <li className="flex gap-2.5 items-center">
@@ -96,7 +96,7 @@ export default function Footer() {
       <div className="border-t border-cream/10 relative">
         <div className="container-lp py-5 text-xs text-cream/45 flex flex-col sm:flex-row gap-2 justify-between">
           <p>© {year} Lil Paws Dog Clinic & Pet Shop. All rights reserved.</p>
-          <p>Dog Clinic by Dr. Mukesh Tiwari — Kolar Road, Bhopal</p>
+          <p>Dog Clinic by Dr. Mukesh Tiwari — Minal & Kolar Road, Bhopal</p>
         </div>
       </div>
     </footer>

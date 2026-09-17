@@ -7,7 +7,7 @@ const homepageContentSchema = new mongoose.Schema(
       subtitle: {
         type: String,
         default:
-          'Lil Paws Dog Clinic & Pet Shop brings veterinary care and everyday pet essentials together, right on Kolar Road, Bhopal.',
+          'Lil Paws Dog Clinic & Pet Shop brings veterinary care and everyday pet essentials together, across our Minal and Kolar Road locations in Bhopal.',
       },
       primaryCtaText: { type: String, default: 'Book an Appointment' },
       primaryCtaLink: { type: String, default: '/appointments' },
