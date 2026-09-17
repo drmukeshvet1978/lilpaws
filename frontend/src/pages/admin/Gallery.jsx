@@ -81,22 +81,32 @@ export default function AdminGallery() {
       ) : images.length === 0 ? (
         <EmptyState title="No images yet" description="Upload your first photos above." />
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {images.map((img) => (
-            <div key={img._id} className="relative group rounded-2xl overflow-hidden bg-bone aspect-square">
-              <img src={img.url} alt={img.altText || img.category} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/50 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
-                <button onClick={() => toggleFeatured(img)} className={`p-2 rounded-full ${img.isFeatured ? 'bg-paw-500 text-white' : 'bg-white text-ink'}`}>
-                  <Star size={15} fill={img.isFeatured ? 'white' : 'none'} />
-                </button>
-                <button onClick={() => handleDelete(img._id)} className="p-2 rounded-full bg-white text-red-600">
-                  <Trash2 size={15} />
-                </button>
+        <>
+          <p className="text-xs text-ink/45 mb-3">
+            Tap the <Star size={11} className="inline -mt-0.5" fill="currentColor" /> star to feature a photo — featured photos are the only ones shown in the Gallery section on the Home page.
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {images.map((img) => (
+              <div key={img._id} className={`relative group rounded-2xl overflow-hidden bg-bone aspect-square ring-2 transition-colors ${img.isFeatured ? 'ring-paw-500' : 'ring-transparent'}`}>
+                <img src={img.url} alt={img.altText || img.category} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/50 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                  <button onClick={() => toggleFeatured(img)} className={`p-2 rounded-full ${img.isFeatured ? 'bg-paw-500 text-white' : 'bg-white text-ink'}`}>
+                    <Star size={15} fill={img.isFeatured ? 'white' : 'none'} />
+                  </button>
+                  <button onClick={() => handleDelete(img._id)} className="p-2 rounded-full bg-white text-red-600">
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+                <span className="absolute bottom-2 left-2 text-[10px] font-semibold bg-ink/70 text-white px-2 py-0.5 rounded-full">{img.category}</span>
+                {img.isFeatured && (
+                  <span className="absolute top-2 right-2 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-white bg-paw-500 px-2 py-0.5 rounded-full">
+                    <Star size={9} fill="white" /> Featured
+                  </span>
+                )}
               </div>
-              <span className="absolute bottom-2 left-2 text-[10px] font-semibold bg-ink/70 text-white px-2 py-0.5 rounded-full">{img.category}</span>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       )}
       <ConfirmDialog />
     </div>

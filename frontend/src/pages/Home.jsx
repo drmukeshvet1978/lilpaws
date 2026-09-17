@@ -9,11 +9,12 @@ import ServiceCard from '../components/ServiceCard';
 import ProductCard from '../components/ProductCard';
 import TestimonialCard from '../components/TestimonialCard';
 import FAQAccordion from '../components/FAQAccordion';
+import HomeGallery from '../components/HomeGallery';
 import { Loader } from '../components/States';
 import { Reveal, Stagger, StaggerItem } from '../components/motion/Reveal';
 import MagneticButton from '../components/motion/MagneticButton';
 import { CatMark, PawMark } from '../components/motion/PetIllustrations';
-import { homepageApi, serviceApi, testimonialApi, faqApi, aboutApi, productApi } from '../api/services';
+import { homepageApi, serviceApi, testimonialApi, faqApi, aboutApi, productApi, galleryApi } from '../api/services';
 
 const toPascalCase = (str = '') => str.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join('');
 
@@ -23,6 +24,7 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
   const [faqs, setFaqs] = useState([]);
+  const [galleryImages, setGalleryImages] = useState([]);
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -34,8 +36,9 @@ export default function Home() {
       testimonialApi.getAll(),
       faqApi.getAll(),
       aboutApi.get(),
+      galleryApi.getAll({ featured: true }),
     ])
-      .then(([h, s, p, t, f, a]) => {
+      .then(([h, s, p, t, f, a, g]) => {
         setContent(h.data.content);
         setServices(s.data.services.slice(0, 6));
         // featured items shelved first, then fill the rest of the shelf with
@@ -47,6 +50,9 @@ export default function Home() {
         setProducts([...featured, ...rest].slice(0, 8));
         setTestimonials(t.data.testimonials.slice(0, 3));
         setFaqs(f.data.faqs.slice(0, 5));
+        // only admin-marked "featured" gallery photos show up here — the rest
+        // of the album stays on the dedicated Gallery page
+        setGalleryImages(g.data.images || []);
         setDoctor(a.data.profile);
       })
       .finally(() => setLoading(false));
@@ -224,6 +230,11 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* Gallery — curated highlights only; admin marks which photos show up
+          here from the full Gallery page, everything else stays off the
+          homepage on purpose */}
+      <HomeGallery images={galleryImages} />
 
       {/* FAQ */}
       {faqs.length > 0 && (
