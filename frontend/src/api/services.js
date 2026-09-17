@@ -36,7 +36,7 @@ export const productApi = {
   getOne: (idOrSlug) => api.get(`/products/${idOrSlug}`),
   create: (formData) => api.post('/products', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
   update: (id, formData) => api.put(`/products/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
-  removeImage: (id, publicId) => api.delete(`/products/${id}/images/${publicId}`),
+  removeImage: (id, publicId) => api.delete(`/products/${id}/images/${encodeURIComponent(publicId)}`),
   delete: (id) => api.delete(`/products/${id}`),
 };
 
@@ -75,7 +75,7 @@ export const homepageApi = {
   get: () => api.get('/homepage'),
   update: (data) => api.put('/homepage', data),
   addHeroImage: (formData) => api.post('/homepage/hero-image', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
-  removeHeroImage: (publicId) => api.delete(`/homepage/hero-image/${publicId}`),
+  removeHeroImage: (publicId) => api.delete(`/homepage/hero-image/${encodeURIComponent(publicId)}`),
 };
 
 // ---------- Settings ----------

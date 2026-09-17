@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, ChevronLeft, ChevronRight, GripVertical } from 'lucide-react';
 import { AdminPageHeader, Modal, FormField, Badge, useConfirm } from '../../components/admin/AdminUI';
 import { Loader, EmptyState } from '../../components/States';
 import { productApi } from '../../api/services';
@@ -15,6 +15,8 @@ export default function AdminProducts() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [files, setFiles] = useState([]);
+  const [currentImages, setCurrentImages] = useState([]); // already-uploaded images for the product being edited, reorderable
+  const [dragIndex, setDragIndex] = useState(null);
   const [saving, setSaving] = useState(false);
   const { confirm, ConfirmDialog } = useConfirm();
 
@@ -24,12 +26,39 @@ export default function AdminProducts() {
   }, []);
   useEffect(() => { load(); }, [load]);
 
-  const openNew = () => { setEditing(null); setForm(emptyForm); setFiles([]); setModalOpen(true); };
+  // Local preview URLs for newly selected (not-yet-uploaded) files, so the admin can see
+  // what they picked before hitting Save — and revoke them once no longer needed.
+  const filePreviews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
+  useEffect(() => () => filePreviews.forEach((url) => URL.revokeObjectURL(url)), [filePreviews]);
+
+  const openNew = () => { setEditing(null); setForm(emptyForm); setFiles([]); setCurrentImages([]); setModalOpen(true); };
   const openEdit = (p) => {
     setEditing(p);
     setForm({ name: p.name, description: p.description || '', category: p.category, price: p.price || '', isAvailable: p.isAvailable, isFeatured: p.isFeatured, isActive: p.isActive, displayOrder: p.displayOrder });
     setFiles([]);
+    setCurrentImages(p.images || []);
     setModalOpen(true);
+  };
+
+  const removeSelectedFile = (index) => {
+    setFiles((fs) => fs.filter((_, i) => i !== index));
+  };
+
+  // Reordering the already-uploaded images — drag & drop for desktop, arrow buttons for
+  // touch/keyboard so it works everywhere. Order is only persisted to the server on Save.
+  const moveImage = (from, to) => {
+    if (to < 0 || to >= currentImages.length) return;
+    setCurrentImages((imgs) => {
+      const next = [...imgs];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      return next;
+    });
+  };
+  const handleDrop = (dropIndex) => {
+    if (dragIndex === null || dragIndex === dropIndex) { setDragIndex(null); return; }
+    moveImage(dragIndex, dropIndex);
+    setDragIndex(null);
   };
 
   const handleSave = async () => {
@@ -37,6 +66,7 @@ export default function AdminProducts() {
     setSaving(true);
     const fd = new FormData();
     Object.entries(form).forEach(([k, v]) => fd.append(k, v));
+    if (editing) fd.append('imageOrder', JSON.stringify(currentImages.map((img) => img.publicId)));
     files.forEach((f) => fd.append('images', f));
     try {
       if (editing) {
@@ -70,9 +100,9 @@ export default function AdminProducts() {
   const removeImage = async (productId, publicId) => {
     try {
       await productApi.removeImage(productId, publicId);
+      setCurrentImages((imgs) => imgs.filter((img) => img.publicId !== publicId));
       toast.success('Image removed');
       load();
-      setModalOpen(false);
     } catch {
       toast.error('Could not remove image');
     }
@@ -126,16 +156,61 @@ export default function AdminProducts() {
           <FormField label="Display Order"><input type="number" className="input" value={form.displayOrder} onChange={(e) => setForm((f) => ({ ...f, displayOrder: e.target.value }))} /></FormField>
         </div>
 
-        {editing && editing.images?.length > 0 && (
+        {editing && currentImages.length > 0 && (
           <div className="mt-4">
-            <p className="text-sm font-semibold text-ink/80 mb-2">Current Images</p>
-            <div className="flex flex-wrap gap-2">
-              {editing.images.map((img) => (
-                <div key={img.publicId} className="relative w-16 h-16 rounded-lg overflow-hidden group">
-                  <img src={img.url} alt="" className="w-full h-full object-cover" />
-                  <button onClick={() => removeImage(editing._id, img.publicId)} className="absolute inset-0 bg-ink/50 text-white text-xs opacity-0 group-hover:opacity-100 flex items-center justify-center">
-                    Remove
-                  </button>
+            <p className="text-sm font-semibold text-ink/80 mb-2">
+              Current Images <span className="font-normal text-ink/40">— drag to reorder, first image is used as the cover</span>
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {currentImages.map((img, i) => (
+                <div
+                  key={img.publicId}
+                  draggable
+                  onDragStart={() => setDragIndex(i)}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={() => handleDrop(i)}
+                  onDragEnd={() => setDragIndex(null)}
+                  className={`relative w-20 h-20 rounded-lg overflow-hidden group border-2 cursor-grab active:cursor-grabbing transition-colors ${
+                    dragIndex === i ? 'border-paw-500 opacity-50' : 'border-transparent hover:border-paw-400'
+                  }`}
+                >
+                  <img src={img.url} alt="" className="w-full h-full object-cover pointer-events-none" />
+
+                  {i === 0 && (
+                    <span className="absolute top-1 left-1 text-[9px] font-bold uppercase text-white bg-paw-500 px-1.5 py-0.5 rounded-full">
+                      Cover
+                    </span>
+                  )}
+
+                  <GripVertical size={13} className="absolute top-1 right-1 text-white/80 drop-shadow" />
+
+                  <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-ink/60 backdrop-blur-sm px-1 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      type="button"
+                      onClick={() => moveImage(i, i - 1)}
+                      disabled={i === 0}
+                      className="text-white p-0.5 disabled:opacity-30"
+                      aria-label="Move left"
+                    >
+                      <ChevronLeft size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeImage(editing._id, img.publicId)}
+                      className="text-white text-[10px] font-semibold px-1"
+                    >
+                      Remove
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveImage(i, i + 1)}
+                      disabled={i === currentImages.length - 1}
+                      className="text-white p-0.5 disabled:opacity-30"
+                      aria-label="Move right"
+                    >
+                      <ChevronRight size={14} />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -143,8 +218,32 @@ export default function AdminProducts() {
         )}
 
         <FormField label="Add Images" className="mt-4" hint="Up to 6 images per upload">
-          <input type="file" accept="image/*" multiple onChange={(e) => setFiles(Array.from(e.target.files))} className="text-sm" />
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => setFiles(Array.from(e.target.files).slice(0, 6))}
+            className="text-sm"
+          />
         </FormField>
+
+        {files.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-3">
+            {files.map((f, i) => (
+              <div key={`${f.name}-${i}`} className="relative w-16 h-16 rounded-lg overflow-hidden group border border-ink/10">
+                <img src={filePreviews[i]} alt={f.name} className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removeSelectedFile(i)}
+                  className="absolute inset-0 bg-ink/50 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                  aria-label={`Remove ${f.name}`}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="flex flex-wrap gap-5 mt-4">
           <label className="flex items-center gap-2 text-sm font-semibold text-ink/80">

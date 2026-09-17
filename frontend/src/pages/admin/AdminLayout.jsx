@@ -70,8 +70,8 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-bone flex">
-      {/* Desktop sidebar */}
-      <aside className="hidden lg:flex flex-col w-64 bg-ink shrink-0">
+      {/* Desktop sidebar — pinned to the viewport, only its own nav list scrolls internally */}
+      <aside className="hidden lg:flex flex-col w-64 bg-ink shrink-0 sticky top-0 h-screen">
         <SidebarContent />
       </aside>
 

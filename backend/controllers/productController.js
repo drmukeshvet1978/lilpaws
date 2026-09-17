@@ -81,6 +81,21 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.slug = slug;
   }
 
+  // Reorder existing images: expects a JSON array of publicIds in the new order
+  if (req.body.imageOrder) {
+    try {
+      const order = JSON.parse(req.body.imageOrder);
+      if (Array.isArray(order)) {
+        const byId = new Map(product.images.map((img) => [img.publicId, img]));
+        const ordered = order.map((id) => byId.get(id)).filter(Boolean);
+        const remaining = product.images.filter((img) => !order.includes(img.publicId));
+        product.images = [...ordered, ...remaining];
+      }
+    } catch (e) {
+      // ignore malformed order payload, keep existing order
+    }
+  }
+
   if (req.files && req.files.length > 0) {
     const uploads = await Promise.all(req.files.map((f) => uploadBufferToCloudinary(f.buffer, 'lilpaws/products')));
     const newImages = uploads.map((r) => ({ url: r.secure_url, publicId: r.public_id, altText: product.name }));

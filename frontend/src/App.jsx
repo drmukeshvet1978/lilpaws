@@ -10,6 +10,7 @@ import About from './pages/About';
 import Services from './pages/Services';
 import ServiceDetails from './pages/ServiceDetails';
 import PetShop from './pages/PetShop';
+import ProductDetails from './pages/ProductDetails';
 import GalleryPage from './pages/GalleryPage';
 import Appointments from './pages/Appointments';
 import Contact from './pages/Contact';
@@ -54,6 +55,7 @@ export default function App() {
       <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
       <Route path="/services/:slug" element={<PublicLayout><ServiceDetails /></PublicLayout>} />
       <Route path="/pet-shop" element={<PublicLayout><PetShop /></PublicLayout>} />
+      <Route path="/pet-shop/:slug" element={<PublicLayout><ProductDetails /></PublicLayout>} />
       <Route path="/gallery" element={<PublicLayout><GalleryPage /></PublicLayout>} />
       <Route path="/appointments" element={<PublicLayout><Appointments /></PublicLayout>} />
       <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
