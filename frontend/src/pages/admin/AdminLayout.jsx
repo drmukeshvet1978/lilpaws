@@ -40,7 +40,7 @@ export default function AdminLayout() {
         <img src={logo} alt="Lil Paws" className="h-9 object-contain" />
         <span className="font-display font-semibold text-cream text-sm">Admin Panel</span>
       </div>
-      <nav className="flex-1 overflow-y-auto px-3 space-y-0.5">
+      <nav className="flex-1 overflow-y-auto sidebar-scroll px-3 space-y-0.5">
         {navItems.map((item) => (
           <NavLink
             key={item.to}

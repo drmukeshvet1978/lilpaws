@@ -4,6 +4,8 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(240, 128, 14, 0.35) transparent;
 }
 
 body {
@@ -95,10 +97,50 @@ select:focus-visible {
   mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
 
+/* Site-wide scrollbar — thin, on-brand, applies to the page and any scrollable
+   panel (modals, dropdowns, etc). .no-scrollbar and .sidebar-scroll below take
+   precedence where they're used, since a class selector beats this element one. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(240, 128, 14, 0.32);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(240, 128, 14, 0.55);
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Thin, dark-themed scrollbar for the admin sidebar nav — replaces the default
+   chunky OS scrollbar with something that matches the panel instead of clashing. */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(251, 247, 241, 0.22) transparent;
+}
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(251, 247, 241, 0.22);
+  border-radius: 999px;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(251, 247, 241, 0.4);
 }
