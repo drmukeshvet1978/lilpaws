@@ -14,16 +14,16 @@ export default function ServiceCard({ service, index = 0 }) {
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.55, delay: (index % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -4 }}
-      className="group"
+      className="group h-full"
     >
       <Link
         to={`/services/${service.slug}`}
         data-cursor="View"
-        className="relative flex flex-col justify-between p-7 bg-white border border-ink/8 rounded-2xl overflow-hidden hover:border-paw-400 hover:shadow-soft transition-all duration-300 min-h-[240px]"
+        className="relative flex flex-col justify-between h-full p-7 bg-white border border-ink/8 rounded-2xl overflow-hidden hover:border-paw-400 hover:shadow-soft transition-all duration-300"
       >
         <div
           aria-hidden="true"
-          className="absolute -right-6 -top-6 text-[86px] font-display font-semibold text-ink/[0.04] group-hover:text-paw-500/[0.08] transition-colors select-none leading-none"
+          className="absolute top-4 right-5 text-[56px] font-display font-semibold text-ink/10 group-hover:text-paw-500/20 transition-colors select-none leading-none"
         >
           {num}
         </div>
